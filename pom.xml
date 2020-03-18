@@ -30,7 +30,19 @@
 
         <dependency>
             <groupId>org.openstreetmap.osmosis</groupId>
+            <artifactId>osmosis-pbf</artifactId>
+            <version>${osmosis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openstreetmap.osmosis</groupId>
             <artifactId>osmosis-pbf2</artifactId>
+            <version>${osmosis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openstreetmap.osmosis</groupId>
+            <artifactId>osmosis-areafilter</artifactId>
             <version>${osmosis.version}</version>
         </dependency>
 
