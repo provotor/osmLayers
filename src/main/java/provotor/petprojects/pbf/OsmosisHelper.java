@@ -10,6 +10,16 @@ import java.io.*;
 public class OsmosisHelper {
     private static final double COORDS_TO_DEGREES_COEF = 1.0*1_000_000_000;
 
+    private PbfStore pbfStore;
+
+    /**
+     * Circular dependency. {@link  PbfStoreImpl#setOsmosisHelper(OsmosisHelper)}
+     */
+    @Autowired
+    public void setPbfStore(PbfStore pbfStore) {
+        this.pbfStore = pbfStore;
+    }
+
     public PbfInfo getPbfInfo(File file) {
         StreamSplitter streamSplitter = null;
         Osmformat.HeaderBlock header;
