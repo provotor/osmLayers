@@ -43,4 +43,31 @@ public class PbfStoreImpl implements PbfStore {
     public List<PbfInfo> getPbfList() {
         return new ArrayList<>(pbfFileById.keySet());
     }
+
+
+    @Override
+    public File getPbfById(String pbfId) {
+        return pbfFileById.entrySet().stream()
+                .filter(e -> e.getKey().getId().equals(pbfId))
+                .findFirst().get().getValue();
+    }
+
+
+    @Override // TODO I don't like it, may be I have to use table in database with information about PBF files
+    public PbfInfo getPbfInfoByPbf(File pbf) {
+        return pbfFileById.entrySet().stream()
+                .filter(e -> pbf.equals(e.getValue()))
+                .map(Map.Entry::getKey)
+                .findFirst().get();
+    }
+
+    @Override
+    public File newPbfFile(String newName) {
+        return new File(storeFolder, newName + OSM_PBF_EXTENSION);
+    }
+
+    @Override
+    public void refresh() {
+        init();
+    }
 }
