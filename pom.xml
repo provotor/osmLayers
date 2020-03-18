@@ -13,6 +13,10 @@
         <version>2.2.1.RELEASE</version>
     </parent>
 
+    <properties>
+        <osmosis.version>0.47</osmosis.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -22,6 +26,12 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openstreetmap.osmosis</groupId>
+            <artifactId>osmosis-pbf2</artifactId>
+            <version>${osmosis.version}</version>
         </dependency>
 
         <dependency>
