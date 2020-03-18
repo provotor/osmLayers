@@ -7,7 +7,6 @@ import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
-import provotor.petprojects.pbf.OsmosisHelper;
 import provotor.petprojects.pbf.data.PbfStore;
 import provotor.petprojects.pbf.data.PbfStoreImpl;
 
@@ -30,14 +29,9 @@ public class MainConfig implements WebServerFactoryCustomizer<ConfigurableWebSer
     }
 
     @Bean
-    public OsmosisHelper getOsmosisHelper(){
-        return new OsmosisHelper();
-    }
-
-    @Bean
     @Lazy // We don't need it in tests
     @DependsOn("osmosisHelper")
     public PbfStore getPbfProvider() {
-        return new PbfStoreImpl(getOsmosisHelper(), new File(PBF_STORE_PATH));
+        return new PbfStoreImpl(new File(PBF_STORE_PATH));
     }
 }
