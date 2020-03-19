@@ -1,12 +1,8 @@
-import base.BaseMockTest;
 import base.SpringTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import provotor.petprojects.pbf.Bound;
-import provotor.petprojects.pbf.OsmosisHelper;
-import provotor.petprojects.pbf.PbfCutTask;
-import provotor.petprojects.pbf.PbfInfo;
+import provotor.petprojects.pbf.*;
 import provotor.petprojects.pbf.data.PbfStore;
 
 import java.io.File;
@@ -27,7 +23,6 @@ public class PbfOperationsTest extends SpringTest {
         Assert.assertEquals("Unknown pbf file name", "suriname.osm.pbf", pbfInfoList.get(0).getName());
     }
 
-
     @Test
     public void cut(){
         PbfInfo pbfInfo = pbfStore.getPbfList().get(0);
@@ -45,5 +40,15 @@ public class PbfOperationsTest extends SpringTest {
         pbfStore.refresh();
         PbfInfo pbfInfoNew = pbfStore.getPbfInfoByPbf(f);
         Assert.assertNotNull(pbfInfoNew);
+    }
+
+    @Test
+    public void toDatabase() {
+        PbfInfo pbfInfo = pbfStore.getPbfList().get(0);
+        PbfToDatabaseTask cmd = new PbfToDatabaseTask();
+        cmd.setPbfId(pbfInfo.getId());
+        cmd.setBound(new Bound(-55.0, -51.0, 2.0, 3.0));
+
+        osmosisHelper.pbfToDatabase(cmd);
     }
 }
