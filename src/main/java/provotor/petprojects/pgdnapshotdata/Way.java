@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "WAYS")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Way extends AbstractPersistable<Long> {
+public class Way extends OsmElement {
     public Way() {
     }
 }
