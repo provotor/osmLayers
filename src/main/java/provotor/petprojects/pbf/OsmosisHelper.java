@@ -18,7 +18,9 @@ import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlCopyWriter;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlTruncator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import provotor.petprojects.pbf.data.PbfStore;
 import provotor.petprojects.pbf.data.PbfStoreImpl;
 
@@ -40,6 +42,11 @@ public class OsmosisHelper {
     private String jdbcUser;
 
     private PbfStore pbfStore;
+    private final JdbcTemplate jdbcTemplate;
+
+    public OsmosisHelper(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     /**
      * Circular dependency. {@link  PbfStoreImpl#setOsmosisHelper(OsmosisHelper)}
@@ -135,6 +142,13 @@ public class OsmosisHelper {
 
         copyWriter.complete();
         copyWriter.close();
+
+        assembleMultipolygon();
     }
 
+    @Transactional
+    protected void assembleMultipolygon() {
+        jdbcTemplate.execute("TRUNCATE TABLE multipolygons");
+        jdbcTemplate.execute("select assemble_multipolygon(id) from relations where tags @> 'type=>multipolygon' or tags @> 'type=>boundary'");
+    }
 }
