@@ -17,4 +17,9 @@ public class PgSnapshotTest extends SpringTest {
     public void getWays() throws Exception {
         Assert.assertTrue(repository.getWays(0, 100).getContent().size() > 0);
     }
+
+    @Test
+    public void getPolygons() throws Exception {
+        Assert.assertTrue(repository.getPolygons(0, 100).getContent().size() > 0);
+    }
 }
