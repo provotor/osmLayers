@@ -7,18 +7,17 @@ import provotor.petprojects.layers.LayersConverter;
 import provotor.petprojects.layers.rules.RuleIn;
 import provotor.petprojects.layers.rules.RulesSet;
 
-public class LayersConvertTest extends BaseMockTest {
-    @Autowired
-    private LayersConverter layersConverter;
+import static org.junit.Assert.assertNotNull;
 
+public class LayersConvertTest extends BaseMockTest {
     @Test
-    public void convert() {
+    public void convert() throws Exception {
         CreateLayerTask t = new CreateLayerTask(GeometryType.POINT);
         t.setFieldsList("name", "ele");
         t.add(RulesSet.fromIn(new RuleIn("natural", "peak")));
         t.setName("peaks");
         t.setGeometryType(GeometryType.POINT);
 
-        layersConverter.convert(t);
+        postRequest("createLayer", null, t);
     }
 }

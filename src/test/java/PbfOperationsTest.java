@@ -1,54 +1,44 @@
-import base.SpringTest;
+import base.BaseMockTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import provotor.petprojects.pbf.*;
+import provotor.petprojects.pbf.Bound;
+import provotor.petprojects.pbf.PbfCutTask;
+import provotor.petprojects.pbf.PbfInfo;
+import provotor.petprojects.pbf.PbfToDatabaseTask;
 import provotor.petprojects.pbf.data.PbfStore;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.List;
+import static junit.framework.TestCase.assertTrue;
 
-public class PbfOperationsTest extends SpringTest {
+public class PbfOperationsTest extends BaseMockTest {
     @Autowired
     private PbfStore pbfStore;
 
-    @Autowired
-    private OsmosisHelper osmosisHelper;
-
     @Test
-    public void get() {
-        List<PbfInfo> pbfInfoList = pbfStore.getPbfList();
-        Assert.assertTrue("Store is empty", pbfInfoList.size() > 0);
-        Assert.assertEquals("Unknown pbf file name", "suriname.osm.pbf", pbfInfoList.get(0).getName());
+    public void get() throws Exception {
+        PbfInfo[] pbfInfoArray = getRequest("pbfList", PbfInfo[].class);
+        assertTrue(pbfInfoArray.length > 0);
     }
 
     @Test
-    public void cut(){
+    public void cut() throws Exception {
         PbfInfo pbfInfo = pbfStore.getPbfList().get(0);
         PbfCutTask cmd = new PbfCutTask();
         cmd.setPbfSourceId(pbfInfo.getId());
         cmd.setNewPbfName("test_cutted");
         cmd.setBound(new Bound(-55.0, -51.0, 2.0, 3.0));
 
-        File f = null;
-        try {
-            f = osmosisHelper.cutPbfToPbf(cmd);
-        } catch (FileNotFoundException e) {
-            Assert.fail("Source PBF file not found");
-        }
-        pbfStore.refresh();
-        PbfInfo pbfInfoNew = pbfStore.getPbfInfoByPbf(f);
-        Assert.assertNotNull(pbfInfoNew);
+        PbfInfo newPbfInfo = postRequest("cutPbf", PbfInfo.class, cmd);
+        Assert.assertEquals(cmd.getNewPbfName() + PbfStore.OSM_PBF_EXTENSION, newPbfInfo.getName());
     }
 
     @Test
-    public void toDatabase() {
+    public void toDatabase() throws Exception {
         PbfInfo pbfInfo = pbfStore.getPbfList().get(0);
         PbfToDatabaseTask cmd = new PbfToDatabaseTask();
         cmd.setPbfId(pbfInfo.getId());
         cmd.setBound(new Bound(-55.0, -51.0, 2.0, 3.0));
 
-        osmosisHelper.pbfToDatabase(cmd);
+        postRequest("pbfToDatabase", null, cmd);
     }
 }
