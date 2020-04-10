@@ -7,6 +7,7 @@ import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.*;
+import org.springframework.core.io.ResourceLoader;
 import provotor.petprojects.pbf.OsmosisHelper;
 import provotor.petprojects.pbf.data.PbfStore;
 import provotor.petprojects.pbf.data.PbfStoreImpl;
@@ -46,8 +47,8 @@ public class MainConfig implements WebServerFactoryCustomizer<ConfigurableWebSer
      */
     @Bean
     @Profile(UNIT_TESTS_PROFILE)
-    public PbfStore getPbfProviderForTest(OsmosisHelper osmosisHelper) throws IOException {
-        File testSource = new File(getClass().getClassLoader().getResource("suriname.osm.pbf").getFile());
+    public PbfStore getPbfProviderForTest(OsmosisHelper osmosisHelper, ResourceLoader resourceLoader) throws IOException {
+        File testSource = resourceLoader.getResource("classpath:suriname.osm.pbf").getFile();
         File storeFolder = null;
         try {
             storeFolder = Files.createTempDirectory(this.getClass().getName()).toFile();
