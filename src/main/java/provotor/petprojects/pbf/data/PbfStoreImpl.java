@@ -18,18 +18,10 @@ public class PbfStoreImpl implements PbfStore {
     private File storeFolder;
     private Map<PbfInfo, File> pbfFileById;
 
-    private OsmosisHelper osmosisHelper;
+    private final OsmosisHelper osmosisHelper;
 
-    public PbfStoreImpl(File storeFolder) {
+    public PbfStoreImpl(OsmosisHelper osmosisHelper, File storeFolder) {
         this.storeFolder = storeFolder;
-    }
-
-    /**
-     * Circular dependency with {@link  OsmosisHelper#setPbfStore(PbfStore)}
-     * @param osmosisHelper
-     */
-    @Autowired
-    public void setOsmosisHelper(OsmosisHelper osmosisHelper) {
         this.osmosisHelper = osmosisHelper;
     }
 

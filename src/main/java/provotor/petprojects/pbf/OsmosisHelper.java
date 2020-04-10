@@ -18,6 +18,7 @@ import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlCopyWriter;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlTruncator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,18 +42,12 @@ public class OsmosisHelper {
     @Value( "${jdbc.user}" )
     private String jdbcUser;
 
-    private PbfStore pbfStore;
+    private final PbfStore pbfStore;
     private final JdbcTemplate jdbcTemplate;
 
-    public OsmosisHelper(JdbcTemplate jdbcTemplate) {
+    //@Lazy because there is circular dependency
+    public OsmosisHelper(@Lazy PbfStore pbfStore, JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    /**
-     * Circular dependency. {@link  PbfStoreImpl#setOsmosisHelper(OsmosisHelper)}
-     */
-    @Autowired
-    public void setPbfStore(PbfStore pbfStore) {
         this.pbfStore = pbfStore;
     }
 
