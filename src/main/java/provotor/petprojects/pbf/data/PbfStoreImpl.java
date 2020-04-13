@@ -28,14 +28,15 @@ public class PbfStoreImpl implements PbfStore {
     @PostConstruct
     public void init() {
         pbfFileById = new HashMap<>();
-        File[] files = storeFolder.listFiles(file -> file.getName().endsWith(OSM_PBF_EXTENSION));
-        if (files == null) {
-            throw new NullPointerException();
-        }
-        for(File f: files) {
-            PbfInfo pbfInfo = osmosisHelper.getPbfInfo(f);
-            pbfInfo.setId(f.getName());
-            pbfFileById.put(pbfInfo, f);
+        if (!storeFolder.exists() || !storeFolder.isDirectory()) {
+            storeFolder.mkdir();
+        } else {
+            File[] files = storeFolder.listFiles(file -> file.getName().endsWith(OSM_PBF_EXTENSION));
+            for (File f : files) {
+                PbfInfo pbfInfo = osmosisHelper.getPbfInfo(f);
+                pbfInfo.setId(f.getName());
+                pbfFileById.put(pbfInfo, f);
+            }
         }
     }
 
